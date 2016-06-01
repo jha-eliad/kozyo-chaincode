@@ -9,10 +9,11 @@ package main
 import (
 	"errors"
 	"fmt"
-	//"strconv"
+  //"strconv"
     "encoding/json"
 
-	"github.com/openblockchain/obc-peer/openchain/chaincode/shim"
+  //"github.com/openblockchain/obc-peer/openchain/chaincode/shim"
+    "github.com/hyperledger/fabric/core/chaincode/shim"
 )
 
 // SimpleChaincode example simple Chaincode implementation
@@ -45,7 +46,7 @@ type AllPizes struct {
 }
 */
 
-func (t *SimpleChaincode) init(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
+func (t *SimpleChaincode) Init(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
     // Initialize the collection of commercial paper keys
     fmt.Println("Initializing kozyo")
 	var blank []string
@@ -142,9 +143,15 @@ func (t *SimpleChaincode) createUser(stub *shim.ChaincodeStub, args []string) ([
 
 // Run callback representing the invocation of a chaincode
 func (t *SimpleChaincode) Run(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
+    fmt.Println("run is running " + function)
+	return t.Invoke(stub, function, args)
+}
+
+func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
+	fmt.Println("invoke is running " + function)
 	// Handle different functions
 	if function == "init" {                         // Initialize the chaincode
-		return t.init(stub, args)
+		return t.Init(stub, function, args)
 	} else if function == "createUser" {           // Create a user
 		return t.createUser(stub, args)
 	}
